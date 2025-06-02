@@ -33,18 +33,19 @@ class ImageProcessor:
             detections = self.object_processor.detect_objects("received_image.jpg")
             # inference end
 
-            end_time=time.time()
+            end_time = time.time()
             final_power = self.get_power_usage_nvidia()
-            cpu_end = process.cpu_percent(interval=None)  # This needs a short delay to be meaningful
-            memory_info_end = process.memory_info().rss  # in bytes
+            cpu_end = process.cpu_percent(interval=None)  # End measuring CPU
+            memory_info_end = process.memory_info().rss
 
             # Metrics calculation
-            process_time = round((end_time-start_time)*1000,4)
-            avg_power = round(((initial_power + final_power) / 2),4)
-            throughput = round(self.get_throughput(process_time,"received_image.jpg"),4)
-            cpu_used_percent = round(cpu_end, 2)
-            memory_used_mb = round((memory_info_end - memory_info_start) / (1024 * 1024), 4) 
-            # vedio Size to be sent
+            process_time = round((end_time - start_time) * 1000, 4)
+            avg_power = round(((initial_power + final_power) / 2), 4)
+            throughput = round(self.get_throughput(process_time, "received_image.jpg"), 4)
+            num_cores = psutil.cpu_count(logical=True)  # Get number of logical cores
+            cpu_used_percent = round(cpu_end / num_cores, 2)  # Average per core
+            memory_used_mb = round((memory_info_end - memory_info_start) / (1024 * 1024), 4)
+
             
             print("detections")
             print(detections)
@@ -85,8 +86,8 @@ class ImageProcessor:
         print(log_message.process_time)
 
         self.log_entry.add_to_csv(log_message)
-        # self.log_entry.add_user_data(log_message)
-        # self.log_entry.add_model_data(log_message)
+        self.log_entry.add_user_data(log_message)
+        self.log_entry.add_model_data(log_message)
         # self.log_entry.add_server_data(log_message)
 
         log_entry_string = self.log_entry.get_frontend_string(log_message)        

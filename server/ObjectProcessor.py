@@ -23,19 +23,21 @@ class ObjectProcessor:
         print(f"detector inside objectprocessor {self.detector}")
         
         # return detections
-        if self.detector[:7]=="lp-yolo":
+        if self.detector[:7]=="sn-yolo":
             print("inside if")
             model_path = os.path.join("checkpoints", "yolo", self.detector)
             Model = Yolo(model_path)
             detections = Model.detect(image_path)
             return detections
         
-        if self.detector[:5] == "lp-tf":
+        if self.detector[:5] == "sn-tf":
             print("model Name")
             print(self.detector[2:])
             detector = TensorFlowDetection(self.detector[2:], confidence_threshold=0.5)
             detections = detector.detect(image_path)
-            return detections        
+            return detections    
+        
+            
 
 
         if self.detector[:2] == "tv":

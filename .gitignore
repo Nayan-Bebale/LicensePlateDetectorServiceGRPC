@@ -6,4 +6,6 @@ server/__pycache__
 
 client/venv/
 
+venv
+
 __pycache__
