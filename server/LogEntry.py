@@ -131,6 +131,8 @@ class LogEntry:
 
          
     def add_model_data(self, log_messages):
+        print(f"####################################################################### {log_messages}")
+        print(f"####################################################################### {round(log_messages.cpu_utilized, 2)}")
         model_result = {
                 'ip_address': log_messages.ip_address,
                 'model_name': log_messages.service_name,
